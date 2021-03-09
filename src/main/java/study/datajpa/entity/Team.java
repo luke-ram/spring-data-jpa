@@ -13,9 +13,7 @@ import java.util.List;
 @ToString(of = {"id", "username", "age"})
 public class Team {
 
-    public Team(String name) {
-        this.name = name;
-    }
+
 
     @Id
     @GeneratedValue
@@ -26,5 +24,9 @@ public class Team {
 
     @OneToMany(mappedBy = "team")
     private List<Member> member = new ArrayList<>();
+
+    public Team(String name) {
+        this.name = name;
+    }
 
 }

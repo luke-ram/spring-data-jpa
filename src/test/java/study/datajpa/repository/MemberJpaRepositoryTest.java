@@ -23,6 +23,8 @@ class MemberJpaRepositoryTest {
 
     @Autowired
     private MemberJpaRepository memberJpaRepository;
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Test
     public void testMember() {
@@ -59,5 +61,26 @@ class MemberJpaRepositoryTest {
 
         long deleteCount = memberJpaRepository.count();
         assertThat(deleteCount).isEqualTo(0);
+    }
+
+    @Test
+    public void findByUsernameAndAgeGreaterThenTest() {
+        Member userA = new Member("userA", 10);
+        Member userB = new Member("userB", 20);
+        memberRepository.save(userA);
+        memberRepository.save(userB);
+
+        List<Member> result = memberRepository.findByUserNameAndAgeGreaterThan("userB", 15);
+
+        assertThat(result.get(0).getUserName()).isEqualTo("userB");
+        assertThat(result.get(0).getAge()).isEqualTo(20);
+        assertThat(result.size()).isEqualTo(1);
+
+    }
+
+    @Test
+    public void findHelloBy() {
+        List<Member> helloBy = memberRepository.findHelloBy();
+
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.entity.Member;
 import study.datajpa.entity.MemberDto;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,6 +22,9 @@ public class MemberRepositoryTest6 {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    EntityManager em;
 
     @Test
     public void paging() {
@@ -72,6 +76,31 @@ public class MemberRepositoryTest6 {
         for (Member member : content) {
             System.out.println("member = " + member);
         }
+
+    }
+
+    @Test
+    public void bulkUpdate() {
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 10));
+        memberRepository.save(new Member("member3", 10));
+        memberRepository.save(new Member("member4", 10));
+        memberRepository.save(new Member("member5", 50));
+        memberRepository.save(new Member("member6", 60));
+        memberRepository.save(new Member("member7", 70));
+
+        int i = memberRepository.bulkAgePlus(20);
+
+
+
+        Member member1 = memberRepository.findMemberByUserName("member1");
+        System.out.println("age" + member1.getAge()); //10이 출력됨,
+
+        em.clear(); // 꼭 벌크후에는 클리어 해줘야함
+        Member member2 = memberRepository.findMemberByUserName("member1");
+        System.out.println("age" + member1.getAge()); //11이 출력됨,
+
+
 
 
     }

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.entity.Member;
 import study.datajpa.entity.MemberDto;
+import study.datajpa.entity.Team;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -22,6 +23,9 @@ public class MemberRepositoryTest6 {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    TeamRepository teamRepository;
 
     @Autowired
     EntityManager em;
@@ -92,7 +96,6 @@ public class MemberRepositoryTest6 {
         int i = memberRepository.bulkAgePlus(20);
 
 
-
         Member member1 = memberRepository.findMemberByUserName("member1");
         System.out.println("age" + member1.getAge()); //10이 출력됨,
 
@@ -101,6 +104,28 @@ public class MemberRepositoryTest6 {
         System.out.println("age" + member1.getAge()); //11이 출력됨,
 
 
+    }
+
+    @Test
+    public void findMemberLazy() {
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+
+        teamRepository.save(teamA);
+        teamRepository.save(teamB);
+
+        memberRepository.save(new Member("member1", 10, teamA));
+        memberRepository.save(new Member("member2", 10, teamB));
+
+        em.flush();
+        em.clear();
+
+        List<Member> members = memberRepository.findAll();
+
+        for (Member member : members) {
+            System.out.println(member.getUserName());
+            System.out.println(member.getTeam().getName());
+        }
 
 
     }
